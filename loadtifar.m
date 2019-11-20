@@ -4,7 +4,7 @@ clear
 # @param X      : input images
 # @return im    : output image
 # @return imflat: original array
-function im, imflat = cnvtImage(X)
+function im = cnvtImage(X)
   R=X(1:1024);
   G=X(1025:2048);
   B=X(2049:3072);
@@ -18,7 +18,6 @@ function im, imflat = cnvtImage(X)
       k=k+1;
       end
   end 
-  imflat = X
   im=uint8(im)
   #image(im)
 end
@@ -65,20 +64,22 @@ im=zeros(32,32,3);
 #imflatNorm = double(imflat) / 255;
 #imflatNorm = imflatNorm - mean(imflatNorm)
 #imshow(im)
-num = 2000;
+num = 100;
 imNormal = calNormMean(data,num);
 imNormal = imNormal';
 covImg = cov(imNormal, 1);
 [U,S,V] = svd(covImg);
-epsilon = 0.1;
+epsilon = 0.001;
 S = diag(1.0 ./sqrt(diag(S) + epsilon));
 X_ZCA = U*S*U'*imNormal';
 #newX_ZCA = cnvtImage(X_ZCA(12,:)*255);
 X_ZCA_rescaled = (X_ZCA - nanmin(X_ZCA));
 X_ZCA_rescaled = X_ZCA_rescaled ./ (nanmax(X_ZCA) - nanmin(X_ZCA));
-newX_ZCA_rescaled, X_ZCA_rescaled = cnvtImage(X_ZCA_rescaled(2,:)*255);
+newX_ZCA_rescaled = cnvtImage(X_ZCA_rescaled(12,:)*255);
+figure(1)
 imshow(newX_ZCA_rescaled);
-
+figure(2)
+imshow(cnvtImage(data(12,:)))
 
 
 
