@@ -2,16 +2,16 @@ clear
 A = [1 3 5; 5 4 1; 3 8 6] ;
 covA = cov(A,1)
 
-#function covariance = calculateCovariance(X)
-#    meanX = mean(X);
-#    [rows, cols] = size(X)
-#    X = X - meanX
+function covariance = calculateCovariance(X)
+    meanX = mean(X);
+    [rows, cols] = size(X)
+    X = X - meanX
 #    for c = 1:cols
 #      for c2 = 1:cols
 #        covariance(ros, cols) = dot(X(:,1), X(:,1))/rows
 #      end 
 #    end
-#end
+end
 
 #function to center values by removing mean
 function cntr =  center(X)
@@ -23,16 +23,27 @@ function stdX = standardize(X)
     stdX = center(X)./std(X); #std calculates std for each column
 end
 
-#function to rotate covariance matrix
+#function to decorrelate data
 function decorrelated = decorrelate(X)
     newX = center(X);
     covX = cov(X,1);
     # Calculate the eigenvalues and eigenvectors of the covariance matrix
-    #eigVals, eigVecs = np.linalg.eig(cov)
-    # Apply the eigenvectors to X
-    #decorrelated = X.dot(eigVecs)
-    #return decorrelated
+    [V,D] = eig(covX)
+    # Apply the eigenvectors to X 
+    decorrelated = X * V
 end
+
+#rescale data by divide eigenvalues
+function whitened = whiten(X)
+    newX = center(X)
+    covX = cov(X,1);
+    # Calculate the eigenvalues and eigenvectors of the covariance matrix
+    [V,D] = eig(covX)
+    # Apply the eigenvectors to X
+    decorrelated = X * V
+    # Rescale the decorrelated data
+    whitened = decorrelated / sqrt(D + 1e-5)
+end 
     
 #uncorelated data 
 sd = 1; #standard deviation
@@ -76,11 +87,11 @@ c2 = (c1 + normrnd(7, 5, [300,1]))/2
 C = [c1, c2]
 figure(2)
 subplot(2,1,1);
-plot(C(:,1));
+hist(C(:,1));
 title('Nomrlized C1');
 
 subplot(2,1,2);
-plot(C(:,2));
+hist(C(:,2));
 title('Nomrlized C2');
 covC = cov(C, 1);
 
@@ -97,18 +108,40 @@ covCstd = cov(Cstd, 1);
 subplot(2,2,3)
 scatter(Cstd(:,1), Cstd(:,2))
 
-#Whitening
+#Decorrelation
 Ccnt= center(C)
 figure(4)
-subplot(2,1,1);
+subplot(2,2,1);
 plot(Ccnt(:,1));
-title('Nomrlized Ccnt1');
-subplot(2,1,2);
+title('Ccnt1 mean removed');
+subplot(2,2,2);
 plot(Ccnt(:,2));
-title('Nomrlized Ccnt2');
+title('Ccnt2 mean removed');
+subplot(2,2,3);
+scatter(Ccnt(:,1), Ccnt(:,2));
+title('Ccnt');
+Cdeco = decorrelate(Ccnt)
+subplot(2,2,4);
+scatter(Cdeco(:,1), Cdeco(:,2));
+title('Decorrelated Ccnt');
 covCcnt = cov(Ccnt, 1);
 
-
+#Whitening
+Cwhiten = whiten(Ccnt);
+figure(5)
+subplot(2,2,1);
+plot(Cwhiten(:,1));
+title('Whiten CCnt1');
+subplot(2,2,2);
+plot(Cwhiten(:,2));
+title('Whiten Ccnt2');
+subplot(2,2,3);
+scatter(Ccnt(:,1), Ccnt(:,2));
+title('Ccnt');
+subplot(2,2,4);
+scatter(Cwhiten(:,1), Cwhiten(:,2));
+title('Whitening Ccnt');
+covCwhit = cov(Cwhiten, 1)
 
 
 
