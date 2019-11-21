@@ -2,8 +2,9 @@ clear
 
 #plot vector from origin 
 function plotVectors(vecs)
-    for i = 1 : length(vecs) #length is num of rows
-        x = cat(1, [0,0], vecs(i,:))
+    v = vecs'
+    for i = 1 : length(v) #length is num of rows
+        x = cat(1, [0,0], v(i,:));
         quiver(x(1),  #start x
                x(3),  #start y
                x(2),  #x direction
@@ -21,15 +22,15 @@ function matrixToPlot(matrix)
 
     # Modified unit circle (separate negative and positive parts)
     x1 = matrix(1,1).*x + matrix(1,2).*y;
-    y1 = matrix(2,1).*x + matrix(2,2).*y;
+    y1 = matrix(2,1)*x + matrix(2,2).*y;
     x1_neg = matrix(1,1).*x - matrix(1,2).*y;
     y1_neg = matrix(2,1).*x - matrix(2,2).*y;
 
     # Vectors
-    u1 = [matrix(1,1),matrix(2,1)];
-    v1 = [matrix(1,2),matrix(2,2)];
+    u = [matrix(1,1),matrix(1,2)];
+    v = [matrix(2,1),matrix(2,2)];
 
-    plotVectors([u1; v1]);
+    plotVectors([u; v]);
 
     plot(x1, y1, 'b','Linewidth',6 ,x1_neg, y1_neg, 'b','Linewidth',6);
     grid on 
@@ -54,16 +55,29 @@ plot(x1, -y1, 'b');
 grid on 
 title('Transformed circle');
 
-u = [1 0]
-v = [0 1]
+#plot vectors
+v = [1 0];
+u = [0 2];
 figure(2)
-plotVectors([u; v])
+plotVectors([v; u])
 
-u1 = [3 7];
-v1 = [5 2];
-A = [u1; v1];
+#apply matrix transform to vector 
+v1 = [3 7];
+u1 = [5 2];
+A = [v1; u1];
 figure(3)
 matrixToPlot(A);
+
+#apply SVD decomposition
+[U,S,V] = svd(A);
+figure(4) 
+matrixToPlot(V'); #apply rotation compoenent to unit vector
+
+figure(5)
+matrixToPlot(S*(V')); #apply scaling to unit vector 
+
+figure(6)
+matrixToPlot((U')*S*(V')); #apply scaling to unit vector 
 
 
 
