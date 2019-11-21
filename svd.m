@@ -86,7 +86,9 @@ plotVectors([u1; v1], 'r');
 A1 = [7 2;3 4;5 3];
 [U1,S1,V1] = svd(A1);
 
-[VA,DA] = eig((A1')*A1); 
+[VA,DA] = eig((A1')*A1); #right sigular vector V1 = eigen vector 
+                         # of A'A 
 [VA1,DA1] = eig(A1*(A1')); #VA = V1  
-sqrtDA = sqrt(DA1)
+#singular values are sqrt of eigenvalues of A'A
+sqrtDA = sqrt(DA) 
 
