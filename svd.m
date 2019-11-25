@@ -79,6 +79,7 @@ matrixToPlot(S*(V'), 'g'); #apply scaling to unit vector
 figure(6)
 matrixToPlot((U')*S*(V'), 'g'); #apply rotation to unit vector 
 
+#axis forms the transformation
 u1 = [S(1)*U(1,1), S(4)*U(2,1)]; 
 v1 = [S(1)*U(1,2), S(4)*U(2,2)];
 plotVectors([u1; v1], 'r');
@@ -90,5 +91,29 @@ A1 = [7 2;3 4;5 3];
                          # of A'A 
 [VA1,DA1] = eig(A1*(A1')); #VA = V1  
 #singular values are sqrt of eigenvalues of A'A
-sqrtDA = sqrt(DA) 
+sqrtDA = sqrt(DA);
+
+img = imread('xorr.png'); 
+img = rgb2gray(img);
+imgD = double(img);
+[U2,S2,V2] = svd(imgD); #vector is columns of matrix
+figure(7)
+imshow(img);
+
+#reconstruct image from only 2 singular values
+#reconstimg = U2(:,1:400) * S2(1:400,:) * V2;
+S2(300:size(S2,1),:) = 0;
+S2(:,300:size(S2,2)) = 0; 
+reconstimg = U2 * S2 * V2'; 
+imshow(uint8(reconstimg));
+#U2(:,1:2)'
+#*S2(:,1:2)*V(1:2,:)'
+
+
+
+
+
+
+
+
 
