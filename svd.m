@@ -93,21 +93,19 @@ A1 = [7 2;3 4;5 3];
 #singular values are sqrt of eigenvalues of A'A
 sqrtDA = sqrt(DA);
 
-img = imread('xorr.png'); 
-img = rgb2gray(img);
-imgD = double(img);
+img = imread('operahouse.jpg'); 
+imgGrey = rgb2gray(img);
+imgD = double(imgGrey);
 [U2,S2,V2] = svd(imgD); #vector is columns of matrix
 figure(7)
-imshow(img);
+imshow(imgGrey);
 
-#reconstruct image from only 2 singular values
-#reconstimg = U2(:,1:400) * S2(1:400,:) * V2;
-S2(300:size(S2,1),:) = 0;
-S2(:,300:size(S2,2)) = 0; 
-reconstimg = U2 * S2 * V2'; 
+#reconstruct image from only 200 singular values
+S2(200:size(S2,1),:) = 0; 
+reconstimg = U2(:,1:200) * S2(1:200,:) * V2'; 
+figure(8)
 imshow(uint8(reconstimg));
-#U2(:,1:2)'
-#*S2(:,1:2)*V(1:2,:)'
+
 
 
 
