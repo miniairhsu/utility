@@ -47,16 +47,16 @@ function [H,Ix,Iy] = harris(imgD)
   H = detA - k.*traceA.*2;
 end
 
-img=imread('edge_detection.jpg');
+img=imread('operahouse.jpg');
 imgGray=rgb2gray(img);
 imgD=double(imgGray);
 [H,Ix,Iy] = harris(imgD);
 for j=1:size(imgD,1)-2
   for i=1:size(imgD,2)-2
-    if H(j,i) > 0
+    if H(j,i) > 300000
       img(j,i,:) = [255 0 0];
-    elseif H(j,i) < 0
-      img(j,i,:) = [0 255 0];
+    #elseif H(j,i) > 0
+    #  img(j,i,:) = [0 255 0];
     end
   end  
 end 
