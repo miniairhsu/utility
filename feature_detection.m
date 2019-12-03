@@ -1,12 +1,12 @@
 clear all
 function Ix = gradient_x(imgD)
-  kernel_x = [-1 0 1; -2 0 2; -1 0 1];
-  Ix = conv2(imgD, kernel_x);
+  kernel_x = [1 0 -1; 2 0 -2; 1 0 -1];
+  Ix = conv2(imgD, kernel_x, 'same');
 end   
 
 function Iy = gradient_y(imgD)
   kernel_y = [1 2 1; 0 0 0; -1 -2 -1];
-  Iy = conv2(imgD, kernel_y);
+  Iy = conv2(imgD, kernel_y, 'same');
 end   
 
 function [img, Ix, Iy] = sobel(imgD)
@@ -27,19 +27,19 @@ function [img, Ix, Iy] = sobel(imgD)
 end
 
 function [H,Ix,Iy] = harris(imgD)
-  Ix = gradient_x(imgD);
-  Iy = gradient_y(imgD);
+  Ix = gradient_x(abs(imgD));
+  Iy = gradient_y(abs(imgD));
   #harris operation
   Ixx = Ix.*Ix;
   Iyy = Iy.*Iy;
   Ixy = Ix.*Iy;
   #gaussian
-  sigma=2;
+  sigma=1.6;
   g = fspecial('gaussian',max(1,fix(6*sigma)), sigma); %%%%%% Gaussien Filter 
   Ix2 = conv2(Ixx, g, 'same');  
   Iy2 = conv2(Iyy, g, 'same');
   Ixy2 = conv2(Ixy, g,'same');
-  k = 0.05;
+  k = 0.06;
   # determinant
   detA = Ix2.*Iy2 - Ixy2.*Ixy2;
   # trace
@@ -53,7 +53,7 @@ imgD=double(imgGray);
 [H,Ix,Iy] = harris(imgD);
 for j=1:size(imgD,1)-2
   for i=1:size(imgD,2)-2
-    if H(j,i) > 300000
+    if H(j,i) > 50000000
       img(j,i,:) = [255 0 0];
     #elseif H(j,i) > 0
     #  img(j,i,:) = [0 255 0];
