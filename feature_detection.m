@@ -27,8 +27,8 @@ function [img, Ix, Iy] = sobel(imgD)
 end
 
 function [H,Ix,Iy] = harris(imgD)
-  Ix = gradient_x(abs(imgD));
-  Iy = gradient_y(abs(imgD));
+  Ix = gradient_x(imgD);
+  Iy = gradient_y(imgD);
   #harris operation
   Ixx = Ix.*Ix;
   Iyy = Iy.*Iy;

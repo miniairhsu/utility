@@ -112,7 +112,7 @@ x=floor((extrema(3:4:end)-1)./(n./(2.^(extrema(1:4:end)-2))))+1;
 y=mod((extrema(3:4:end)-1),m./(2.^(extrema(1:4:end)-2)))+1;
 ry=y./2.^(octave-1-extrema(1:4:end));
 rx=x./2.^(octave-1-extrema(1:4:end));
-figure(2)
+figure(3)
 subplot(1,2,2);
 imshow(origin)
 hold on
